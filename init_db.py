@@ -22,7 +22,7 @@ def sample_data(engine):
 
 
 if __name__ == '__main__':
-    db_url = DSN.format(**config)
+    db_url = DSN.format(**config['postgres'])
     engine = create_engine(db_url)
 
     create_tables(engine)

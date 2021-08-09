@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import aiopg
+import aiopg.sa
 from sqlalchemy import MetaData, Table, Integer, Column, String, Text, DateTime
 
 meta = MetaData()
@@ -13,19 +13,18 @@ advertisement = Table(
     Column('id', Integer, primary_key=True),
     Column('title', String(64), index=True, unique=True, nullable=False),
     Column('description', Text, index=True, nullable=False, default=''),
-    Column('creator_id', Integer, db.ForeignKey('user.id')),
+    # Column('creator_id', Integer, ForeignKey('user.id')),
     Column('created_on', DateTime, default=datetime.utcnow)
 )
 
 
 async def init_pg(app):
     conf = app['config']['postgres']
+    dsn = f"postgresql://{conf['user']}:{conf['password']}@{conf['host']}:{conf['port']}/{conf['database']}"
     engine = await aiopg.sa.create_engine(
-        database=conf['database'],
-        user=conf['user'],
-        password=conf['password'],
-        host=conf['host'],
-        port=conf['port'],
+        dsn=dsn,
+        minsize=1,
+        maxsize=2
     )
     app['db'] = engine
 

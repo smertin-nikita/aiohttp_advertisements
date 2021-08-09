@@ -1,5 +1,5 @@
-from views import index
+from views import routes
 
 
 def setup_routes(app):
-    app.router.add_get('/', index)
+    app.add_routes(routes)
