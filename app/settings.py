@@ -1,7 +1,12 @@
+import asyncio
 import os
 import pathlib
+import sys
 
-from dotenv import load_dotenv, dotenv_values
+from dotenv import load_dotenv
+
+if sys.version_info >= (3, 8) and sys.platform.lower().startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 BASE_DIR = pathlib.Path(__file__).parent.parent
 
