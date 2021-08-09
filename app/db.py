@@ -32,3 +32,17 @@ async def init_pg(app):
 async def close_pg(app):
     app['db'].close()
     await app['db'].wait_closed()
+
+
+class RecordNotFound(Exception):
+    """Requested record in database was not found"""
+
+
+async def get_advertisements(conn, advertisement_id):
+    result = await conn.execute(
+        advertisement.select().where(advertisement.c.id == advertisement_id))
+    advertisement_record = await result.first()
+    if not advertisement_record:
+        msg = f"Advertisement with id: {advertisement_id} does not exists"
+        raise RecordNotFound(msg)
+    return advertisement_record
