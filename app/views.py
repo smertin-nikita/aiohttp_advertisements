@@ -1,7 +1,5 @@
 import json
-
 from aiohttp import web
-
 from app.models.adverts import Advert
 
 routes = web.RouteTableDef()
@@ -12,26 +10,31 @@ async def index(request):
     return web.Response(text='Hello Aiohttp!')
 
 
-@routes.view('/advertisements/')
+@routes.view('/advertisements')
 class AdvertList(web.View):
     async def get(self):
         adverts = await Advert.all()
-        return web.Response(
-            body=json.dumps({"adverts": adverts}, default=lambda obj: obj.strftime('%d:%m:%Y')),
-            content_type='application/json'
-        )
+        return web.json_response([advert.to_dict() for advert in adverts])
+
+    async def post(self):
+        data = await self.request.json()
+        advert = await Advert.add(**data)
+        return web.json_response(advert.to_dict())
 
 
 @routes.view('/advertisements/{uid}')
 class Advertisement(web.View):
     async def get(self):
         uid = int(self.request.match_info['uid'])
-        advert = await Advert.get(uid)
-        if advert:
-            return web.Response(
-                body=json.dumps({"advert": advert.to_dict()}),
-                content_type='application/json'
-            )
+        advert = await Advert.get_or_404(uid)
+        return web.json_response(advert.to_dict())
+
+    async def delete(self):
+        uid = int(self.request.match_info['uid'])
+        return  await Advert.delete(uid)
+
+
+
 
 
 # @routes.view('/advertisements/')

@@ -14,9 +14,25 @@ async def get(path, **kwargs):
             return await response.text()
 
 
+async def post(path, **kwargs):
+    async with aiohttp.client.ClientSession() as client:
+        async with client.post(f'{HOST}{path}', **kwargs) as response:
+            return await response.text()
+
+
+async def delete(path, **kwargs):
+    async with aiohttp.client.ClientSession() as client:
+        async with client.delete(f'{HOST}{path}', **kwargs) as response:
+            return await response.text()
+
+
 async def main():
-    result = await get('/advertisements/4')
+    # result = await post('/advertisements', json={'title': 'Second', 'description': 'First description'})
+    # print(result)
+    result = await get(f'/advertisements')
     pprint(result)
+    result = await delete(f'/advertisements/2')
+    print(result)
 
 if __name__ == '__main__':
     # asyncio.get_event_loop().run_until_complete(main())
