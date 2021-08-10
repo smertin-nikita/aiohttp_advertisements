@@ -1,5 +1,6 @@
 import asyncio
 import sys
+from pprint import pprint
 
 import aiohttp
 
@@ -14,8 +15,8 @@ async def get(path, **kwargs):
 
 
 async def main():
-    result = await get('/advertisements/')
-    print(result)
+    result = await get('/advertisements/4')
+    pprint(result)
 
 if __name__ == '__main__':
     # asyncio.get_event_loop().run_until_complete(main())
