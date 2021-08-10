@@ -1,6 +1,6 @@
 from aiohttp import web
 
-from app.db import init_pg, close_pg
+from app.models import init_pg, close_pg
 from app.routes import setup_routes
 from app.settings import config
 
