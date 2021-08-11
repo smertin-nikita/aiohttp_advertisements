@@ -1,18 +1,8 @@
-import aiopg
-from aiohttp import web
 from asyncpg import UniqueViolationError
+from aiohttp import web
 from gino import Gino
 
 db = Gino()
-
-
-async def pool_pg(app):
-    conf = app['config']['postgres']
-    dsn = f"postgresql://{conf['user']}:{conf['password']}@{conf['host']}:{conf['port']}/{conf['database']}"
-    async with aiopg.create_pool(dsn) as pool:
-        app['pool_pg'] = pool
-        yield
-        pool.close()
 
 
 async def init_pg(app):
@@ -47,15 +37,4 @@ class BaseModelMixin:
         return instance
 
     def put(self, kwargs):
-        pass
-
-    @classmethod
-    async def delete(cls, uid):
-        instance = await cls.query.gino.delete(uid)
-        if instance:
-            return instance
-        raise web.HTTPNotFound()
-
-    @classmethod
-    def find_by_attr(cls, kwargs):
         pass

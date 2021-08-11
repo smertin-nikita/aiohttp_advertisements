@@ -1,5 +1,4 @@
 import asyncio
-import sys
 from pprint import pprint
 
 import aiohttp
@@ -31,7 +30,7 @@ async def main():
     # print(result)
     result = await get(f'/advertisements')
     pprint(result)
-    result = await delete(f'/advertisements/2')
+    result = await delete(f'/advertisements/8')
     print(result)
 
 if __name__ == '__main__':
